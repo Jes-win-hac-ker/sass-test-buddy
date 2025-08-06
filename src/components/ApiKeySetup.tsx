@@ -12,7 +12,8 @@ export const ApiKeySetup = ({ onContinueAnyway }: ApiKeySetupProps) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopyEnvVar = () => {
-    navigator.clipboard.writeText('VITE_OPENAI_API_KEY=your_api_key_here');
+    // Updated for Gemini
+    navigator.clipboard.writeText('VITE_GEMINI_API_KEY=your_api_key_here');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -31,7 +32,7 @@ export const ApiKeySetup = ({ onContinueAnyway }: ApiKeySetupProps) => {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center"
+            className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-green-500 flex items-center justify-center"
           >
             <Key size={32} className="text-white" />
           </motion.div>
@@ -41,7 +42,7 @@ export const ApiKeySetup = ({ onContinueAnyway }: ApiKeySetupProps) => {
           </h1>
           
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            To unlock the full AI-powered roasting experience, you'll need an OpenAI API key. 
+            To unlock the full AI-powered roasting experience, you'll need a Google Gemini API key. 
             Don't worry, it's quick and easy to set up!
           </p>
         </div>
@@ -66,14 +67,14 @@ export const ApiKeySetup = ({ onContinueAnyway }: ApiKeySetupProps) => {
                   1
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-lg font-semibold text-foreground">Get your OpenAI API Key</h3>
+                  <h3 className="text-lg font-semibold text-foreground">Get your Google Gemini API Key</h3>
                   <p className="text-muted-foreground">
-                    Visit the OpenAI platform and create an API key (it's free to start!)
+                    Visit Google AI Studio and create an API key (it's free to start!)
                   </p>
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => window.open('https://platform.openai.com/api-keys', '_blank')}
+                    onClick={() => window.open('https://aistudio.google.com/keys', '_blank')}
                     className="mt-2"
                   >
                     <ExternalLink size={16} className="mr-2" />
@@ -99,7 +100,8 @@ export const ApiKeySetup = ({ onContinueAnyway }: ApiKeySetupProps) => {
                   </p>
                   <div className="bg-muted/50 p-3 rounded-lg border border-border">
                     <div className="flex items-center justify-between">
-                      <code className="text-sm">VITE_OPENAI_API_KEY=your_api_key_here</code>
+                      {/* Updated for Gemini */}
+                      <code className="text-sm">VITE_GEMINI_API_KEY=your_api_key_here</code>
                       <Button
                         variant="ghost"
                         size="sm"
