@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Sassy AI Personality Test Design System */
+
+@layer base {
+  :root {
+    --background: 270 15% 8%;
+    --foreground: 280 15% 95%;
+
+    --card: 270 12% 12%;
+    --card-foreground: 280 15% 95%;
+
+    --popover: 270 12% 12%;
+    --popover-foreground: 280 15% 95%;
+
+    --primary: 320 85% 65%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 200 85% 60%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 270 10% 20%;
+    --muted-foreground: 280 10% 65%;
+
+    --accent: 50 90% 65%;
+    --accent-foreground: 270 15% 8%;
+
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 270 15% 25%;
+    --input: 270 15% 20%;
+    --ring: 320 85% 65%;
+
+    --radius: 1rem;
+
+    /* Sassy color palette */
+    --neon-pink: 320 85% 65%;
+    --electric-blue: 200 85% 60%;
+    --lime-green: 110 85% 65%;
+    --sunset-orange: 25 90% 65%;
+    --lavender: 280 65% 75%;
+    --toxic-green: 120 100% 50%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(320 85% 65%), hsl(280 65% 75%));
+    --gradient-secondary: linear-gradient(135deg, hsl(200 85% 60%), hsl(110 85% 65%));
+    --gradient-accent: linear-gradient(135deg, hsl(25 90% 65%), hsl(50 90% 65%));
+    --gradient-chaos: linear-gradient(135deg, hsl(320 85% 65%), hsl(0 75% 60%), hsl(25 90% 65%));
+
+    /* Shadows */
+    --shadow-glow: 0 0 30px hsl(var(--primary) / 0.3);
+    --shadow-neon: 0 0 20px hsl(var(--neon-pink) / 0.5);
+    --shadow-electric: 0 0 20px hsl(var(--electric-blue) / 0.5);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .light {
+    --background: 280 15% 95%;
+    --foreground: 270 15% 8%;
+    --card: 0 0% 100%;
+    --card-foreground: 270 15% 8%;
+    --muted: 280 10% 85%;
+    --border: 270 15% 85%;
+    --input: 280 10% 90%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    background: radial-gradient(circle at 20% 80%, hsl(320 85% 65% / 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, hsl(200 85% 60% / 0.1) 0%, transparent 50%),
+                hsl(var(--background));
+  }
+
+  .sassy-gradient {
+    background: var(--gradient-primary);
+  }
+
+  .chaos-gradient {
+    background: var(--gradient-chaos);
+  }
+
+  .neon-glow {
+    box-shadow: var(--shadow-neon);
+  }
+
+  .electric-glow {
+    box-shadow: var(--shadow-electric);
+  }
+
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+
+  .transition-bounce {
+    transition: var(--transition-bounce);
+  }
+}
