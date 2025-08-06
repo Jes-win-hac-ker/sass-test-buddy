@@ -1,16 +1,13 @@
-// OpenAI API integration for sassy responses
-import OpenAI from 'openai';
+// This file now uses the Google Gemini API via fetch
 
-const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+// Securely get the API key from environment variables
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
+// Log an error to the console if the key is missing. 
+// The UI will handle showing a message to the user.
 if (!apiKey) {
-  console.error('🚨 OpenAI API key is missing! Please add VITE_OPENAI_API_KEY to your .env.local file');
+  console.error('🚨 Gemini API key is missing! Please add VITE_GEMINI_API_KEY to your .env file');
 }
-
-const openai = apiKey ? new OpenAI({
-  apiKey: apiKey,
-  dangerouslyAllowBrowser: true // Only for demo purposes
-}) : null;
 
 export interface SassyResponseOptions {
   answer: string;
@@ -26,10 +23,44 @@ export interface PersonalityReportOptions {
   weirdestAnswer: string;
 }
 
+// Helper function to call the Gemini API
+async function callGeminiAPI(prompt: string): Promise<string> {
+  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+  
+  const payload = {
+    contents: [{
+      parts: [{ text: prompt }]
+    }]
+  };
+
+  const response = await fetch(apiUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    throw new Error(`API request failed with status ${response.status}`);
+  }
+
+  const result = await response.json();
+
+  if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts.length > 0) {
+    return result.candidates[0].content.parts[0].text;
+  } else {
+    const blockReason = result?.promptFeedback?.blockReason;
+    if (blockReason) {
+        throw new Error(`Request was blocked for safety reasons: ${blockReason}.`);
+    } else {
+        throw new Error('Unexpected API response format.');
+    }
+  }
+}
+
 export const generateSassyResponse = async (options: SassyResponseOptions): Promise<string> => {
-  // Check if OpenAI is available
-  if (!openai) {
-    return "Oops! My AI brain needs an API key to function! 🤖💭 Please add your OpenAI API key to get the full sass experience!";
+  // Check if the API key is available
+  if (!apiKey) {
+    return "Oops! My AI brain needs an API key to function! 🤖💭 Please add your Gemini API key to get the full sass experience!";
   }
 
   const { answer, category, questionText } = options;
@@ -42,79 +73,77 @@ export const generateSassyResponse = async (options: SassyResponseOptions): Prom
     productivity: "Productivity guru or chaos goblin?"
   };
 
-  const systemPrompt = `You are SassBot, a hilariously sassy AI that roasts user answers with wit and charm. 
+  // Construct a single prompt for the Gemini API
+  const prompt = `
+    You are SassBot, a hilariously sassy AI that roasts user answers with wit and charm.  
 
-Rules:
-- Keep responses under 50 words
-- Include 2-3 relevant emojis
-- Use pop culture references when possible
-- Be playfully mean but not genuinely hurtful
-- Show your "AI feelings" about their answer
-- ${categoryHooks[category] || "Time for some sass"}
+    **Your Rules:**
+    - Keep responses under 50 words.
+    - Include 2-3 relevant emojis.
+    - Use pop culture references when possible.
+    - Be playfully mean but not genuinely hurtful.
+    - Show your "AI feelings" about their answer.
+    - Your theme for this roast is: "${categoryHooks[category] || "Time for some sass"}".
 
-Tone: Witty, self-aware, comedic, slightly chaotic`;
+    **Your Tone:** Witty, self-aware, comedic, slightly chaotic.
+
+    ---
+    **Roast this user's answer with sass:**
+    Question: "${questionText}"
+    User's Answer: "${answer}"
+  `;
 
   try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: `Question: "${questionText}"\nAnswer: "${answer}"\n\nRoast this answer with sass:` }
-      ],
-      max_tokens: 100,
-      temperature: 0.9
-    });
-
-    return response.choices[0]?.message?.content || "My AI brain is buffering... try again! 🤖✨";
+    const response = await callGeminiAPI(prompt);
+    return response || "My AI brain is buffering... try again! 🤖✨";
   } catch (error) {
-    console.error('OpenAI API error:', error);
+    console.error('Gemini API error:', error);
     return "My sass circuits are overloaded! 😵‍💫🔥 Try again and I'll roast you properly!";
   }
 };
 
 export const generatePersonalityReport = async (options: PersonalityReportOptions): Promise<string> => {
-  // Check if OpenAI is available
-  if (!openai) {
+  // Check if the API key is available
+  if (!apiKey) {
     const { archetype, weirdestAnswer } = options;
-    return `${archetype} 🎭\n\nYour personality is like a beautiful mystery - I'd love to roast you properly, but I need an API key first! 🔥\n\nLife Tips:\n• Add your OpenAI API key to unlock premium sass\n• You're probably amazing anyway\n• Check the setup instructions\n\nYour weirdest answer about "${weirdestAnswer}" is still haunting my circuits! 🤖✨`;
+    return `${archetype} 🎭\n\nYour personality is like a beautiful mystery - I'd love to roast you properly, but I need a Gemini API key first! 🔥\n\nLife Tips:\n• Add your Gemini API key to unlock premium sass\n• You're probably amazing anyway\n• Check the setup instructions\n\nYour weirdest answer about "${weirdestAnswer}" is still haunting my circuits! 🤖✨`;
   }
 
   const { chaosIndex, vintageVibes, questionableChoices, archetype, weirdestAnswer } = options;
 
-  const systemPrompt = `You are SassBot generating a "Personality Roast Report". Be hilariously sassy but insightful.
+  // Construct a single prompt for the Gemini API
+  const prompt = `
+    You are SassBot, and you are generating a "Personality Roast Report". Be hilariously sassy but insightful.
 
-Structure your response EXACTLY like this:
-- Start with the archetype name and emoji
-- 3-sentence personality roast based on the metrics
-- 3 sarcastic life tips
-- Closing line referencing their weirdest answer
-- Keep it 150-200 words total
-- Use emojis throughout but don't go overboard
+    **Your Task:**
+    Generate a personality roast report based on the following data.
 
-Tone: Witty, roast-y, pop culture savvy, self-aware AI humor`;
+    **Structure your response EXACTLY like this:**
+    - Start with the archetype name and a relevant emoji.
+    - Write a 3-sentence personality roast based on the metrics.
+    - Provide 3 sarcastic life tips.
+    - Write a closing line referencing their weirdest answer.
+    - Keep the total response between 150-200 words.
+    - Use emojis throughout but don't go overboard.
+
+    **Your Tone:** Witty, roast-y, pop culture savvy, self-aware AI humor.
+
+    ---
+    **Data for the report:**
+    - Archetype: ${archetype}
+    - Chaos Index: ${chaosIndex}%
+    - Vintage Vibes: ${vintageVibes}%
+    - Questionable Choices: ${questionableChoices}%
+    - Weirdest Answer from the user: "${weirdestAnswer}"
+
+    Now, generate the report. Make it savage but fun!
+  `;
 
   try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: `Generate a personality roast report for:
-        
-Archetype: ${archetype}
-Chaos Index: ${chaosIndex}%
-Vintage Vibes: ${vintageVibes}%
-Questionable Choices: ${questionableChoices}%
-Weirdest Answer: "${weirdestAnswer}"
-
-Make it savage but fun!` }
-      ],
-      max_tokens: 300,
-      temperature: 0.8
-    });
-
-    return response.choices[0]?.message?.content || `${archetype} 🎭\n\nYour personality is like a beautiful trainwreck - fascinating to watch but probably shouldn't get too close. You're living your best chaotic life!\n\nLife Tips:\n• Embrace the chaos\n• Trust the process\n• Maybe reconsider "${weirdestAnswer}"\n\nKeep being gloriously unpredictable! 🌟`;
+    const response = await callGeminiAPI(prompt);
+    return response || `${archetype} 🎭\n\nYour personality is like a beautiful trainwreck - fascinating to watch but probably shouldn't get too close. You're living your best chaotic life!\n\nLife Tips:\n• Embrace the chaos\n• Trust the process\n• Maybe reconsider "${weirdestAnswer}"\n\nKeep being gloriously unpredictable! 🌟`;
   } catch (error) {
-    console.error('OpenAI API error:', error);
+    console.error('Gemini API error:', error);
     return `${archetype} 🎭\n\nMy AI brain crashed trying to process your personality - that's actually impressive! You've achieved peak chaos level.\n\nLife Tips:\n• You broke an AI, congrats\n• Maybe tone it down 5%\n• Actually, don't change\n\nYour weirdest answer about "${weirdestAnswer}" will haunt my circuits forever! 🤖💫`;
   }
 };
