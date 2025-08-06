@@ -12,7 +12,7 @@ interface WelcomeScreenProps {
 
 export const WelcomeScreen = ({ onStart, className = '' }: WelcomeScreenProps) => {
   const [showApiSetup, setShowApiSetup] = useState(false);
-  const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
   // Show API setup if no key is configured
   if (!apiKey && !showApiSetup) {
