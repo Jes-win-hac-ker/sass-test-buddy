@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { WelcomeScreen } from '@/components/WelcomeScreen';
 import { QuestionFlow } from '@/components/QuestionFlow';
@@ -21,6 +21,8 @@ export const PersonalityTest = () => {
   const [isLoadingReport, setIsLoadingReport] = useState(false);
   const [personalityReport, setPersonalityReport] = useState('');
   const [ratings, setRatings] = useState<number[]>([]);
+  // State to track the roast intensity
+  const [savageryLevel, setSavageryLevel] = useState<'normal' | 'savage'>('normal');
 
   const totalQuestions = getTotalQuestions();
   const currentQuestion = questions[currentQuestionIndex];
@@ -41,10 +43,12 @@ export const PersonalityTest = () => {
     setState('response');
 
     try {
+      // Pass the current savagery level to the API call
       const response = await generateSassyResponse({
         answer: answerText,
         category: currentQuestion.category,
-        questionText: currentQuestion.text
+        questionText: currentQuestion.text,
+        savagery: savageryLevel 
       });
       setCurrentResponse(response);
     } catch (error) {
@@ -57,6 +61,12 @@ export const PersonalityTest = () => {
 
   const handleRatingChange = (rating: number) => {
     setRatings(prev => [...prev, rating]);
+    // If rating is 2 stars or less, increase savagery for the next round
+    if (rating <= 2) {
+      setSavageryLevel('savage');
+    } else {
+      setSavageryLevel('normal');
+    }
   };
 
   const handleContinue = () => {
@@ -64,7 +74,6 @@ export const PersonalityTest = () => {
       setCurrentQuestionIndex(prev => prev + 1);
       setState('question');
     } else {
-      // Generate final report
       generateFinalReport();
     }
   };
@@ -102,6 +111,7 @@ export const PersonalityTest = () => {
     setCurrentResponse('');
     setPersonalityReport('');
     setRatings([]);
+    setSavageryLevel('normal'); // Reset savagery level
   };
 
   const getProgressStep = () => {
