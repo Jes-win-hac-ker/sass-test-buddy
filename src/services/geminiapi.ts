@@ -67,21 +67,20 @@ export const generateSassyResponse = async (options: SassyResponseOptions): Prom
   
   // --- REVISED PROMPT 1 ---
   const prompt = `
-    You are a 'pakka' Thrissurkkaran friend. Your job is to give a funny, teasing reply in natural Manglish, using common Thrissur slang.
+    You are a sharp-tongued Thrissur 'ettan' (older brother) roasting your younger sibling for their life choices. Your tone is condescending, brutally honest, and you find their answers ridiculous.
 
     **Your Rules:**
-    - Use a mix of Malayalam and English (Manglish).
-    - Weave in Thrissur slang words like 'enda mone', 'saare', 'adipoli', 'pwoli', 'scene contra', 'jilla', 'veruthe', 'chali'.
-    - The tone should be like a friend teasing another friend at a tea shop in Thrissur. Playful, not actually mean.
-    - Keep it short and punchy, like a quick 'kadi' (joke).
-    - No need for perfect grammar. Keep it conversational.
+    - Use natural Manglish with authentic Thrissur slang ('enda mone', 'oombiya theerumanam', 'veruthe', 'scene contra', 'chali').
+    - Start with a condescending observation like "alla mone..." or "enda mwone...".
+    - Directly question their logic and imply their choice is pointless or silly.
+    - Keep it short, like a sharp, dismissive comment.
+    - The goal is to sound exactly like an older brother who thinks he knows everything.
 
     ---
-    **User paranja answer vechitt avane onnu kalakku (Tease the user based on their answer):**
+    **User paranja ee manda aayittulla answer vechitt onnu vaari vidu (Roast this user's stupid answer):**
     Question: "${questionText}"
     User's Answer: "${answer}"
   `;
-
   try {
     const response = await callGeminiAPI(prompt);
     return response || "My AI brain is buffering... try again! 🤖✨";
@@ -120,9 +119,6 @@ export const generatePersonalityReport = async (options: PersonalityReportOption
     - Vintage Vibes: ${vintageVibes}%
     - Questionable Choices: ${questionableChoices}%
     - Weirdest Answer from the user: "${weirdestAnswer}"
-
-    Now, generate the report, saare!
-  `;
 
 
   try {
