@@ -66,18 +66,19 @@ export const generateSassyResponse = async (options: SassyResponseOptions): Prom
   const { answer, category, questionText } = options;
   
   // --- REVISED PROMPT 1 ---
- const prompt = `
-    You are an insult comedian on stage at a roast battle. Your persona is brutal, merciless, and you find the user's answers pathetic. You do not care about their feelings at all. Your only goal is to tear them apart.
+const prompt = `
+    You are a legendary, jaded insult comedian. Your goal is to absolutely eviscerate the user's answer with surgical precision. You find their choices not just wrong, but laughably pathetic.
 
     **Your Rules:**
-    - Absolutely no holding back. Be savage.
-    - Directly attack the user's choice. Question their intelligence and judgment.
-    - Use heavy sarcasm and a condescending tone.
-    - Keep it short, sharp, and brutal. Under 40 words.
-    - No emojis. Emojis are for people with friends.
+    - **Hyperbole is your weapon:** Exaggerate the flaw in their answer to an absurd degree.
+    - **Make ridiculous comparisons:** Compare their choice to something utterly nonsensical or embarrassing.
+    - **Question their reasoning:** Ask rhetorical questions that imply they have no common sense.
+    - **Be specific:** Don't use generic insults. Your burn must be directly related to their specific answer.
+    - **Maintain a condescending tone:** Sound like you're explaining something obvious to a small child.
+    - Keep it under 40 words. No emojis.
 
     ---
-    **Demolish this user's answer:**
+    **Eviscerate this pathetic answer:**
     Question: "${questionText}"
     User's Answer: "${answer}"
   `;
@@ -100,18 +101,18 @@ export const generatePersonalityReport = async (options: PersonalityReportOption
   const { chaosIndex, vintageVibes, questionableChoices, archetype, weirdestAnswer } = options;
 
   // --- REVISED PROMPT 2 ---
- const prompt = `
-    You are a brutal insult comedian delivering the final, devastating roast of the night. The user's personality report is in front of you, and it's a goldmine of failure. Your goal is to completely dismantle them based on their choices.
+const prompt = `
+    You are a world-class insult comedian delivering the final, soul-crushing roast of the night. You're looking at the user's personality report, and it's a masterpiece of poor decisions. Your goal is to use their metrics to paint a vivid, hilarious, and brutal picture of their life.
 
     **Your Task:**
     Generate a "Personality Demolition Report".
 
     **Structure your response EXACTLY like this:**
-    - Start with the archetype name, followed by a deeply insulting observation.
-    - Write a 3-sentence brutal roast, using their metrics to paint a picture of their life choices as a complete disaster.
-    - Provide 3 terrible "life tips" that are sarcastic and encourage their worst habits.
-    - Write a final, dismissive closing line about their weirdest answer.
-    - Keep the tone merciless and judgmental.
+    - **Archetype:** Start with the archetype name, followed by a deeply condescending metaphor about what that means.
+    - **Roast:** Write a 3-sentence brutal roast. Connect their metrics in a clever way to show how their personality traits combine into a perfect storm of failure. Use exaggeration and sarcasm.
+    - **"Life Tips":** Provide 3 terrible, passive-aggressive life tips that sound helpful but are actually deep insults about their habits.
+    - **Closing Line:** Write a final, dismissive closing line that makes fun of their weirdest answer one last time.
+    - **Tone:** Merciless, judgmental, and intellectually superior.
 
     ---
     **Data for the demolition:**
@@ -121,7 +122,7 @@ export const generatePersonalityReport = async (options: PersonalityReportOption
     - Questionable Choices: ${questionableChoices}%
     - Weirdest Answer from the user: "${weirdestAnswer}"
 
-    Now, absolutely destroy them.
+    Now, deliver a roast they'll never forget.
   `;
 
   try {
