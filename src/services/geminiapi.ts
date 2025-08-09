@@ -13,6 +13,7 @@ export interface SassyResponseOptions {
   answer: string;
   category: string;
   questionText: string;
+  savagery: 'normal' | 'savage'; // Add savagery level
 }
 
 export interface PersonalityReportOptions {
@@ -50,7 +51,6 @@ async function callGeminiAPI(prompt: string): Promise<string> {
   } else {
     const blockReason = result?.promptFeedback?.blockReason;
     if (blockReason) {
-        // This is the most likely cause of the error
         throw new Error(`Request was blocked for safety reasons: ${blockReason}. Try making the prompt less aggressive.`);
     } else {
         throw new Error('Unexpected API response format.');
@@ -60,18 +60,23 @@ async function callGeminiAPI(prompt: string): Promise<string> {
 
 export const generateSassyResponse = async (options: SassyResponseOptions): Promise<string> => {
   if (!apiKey) {
-    return "Oops! My AI brain needs an API key to function! 🤖💭 Please add your Gemini API key to get the full sass experience!";
+    return "Enda mone, API key illand enth cheyyana? Key add cheythitt vaa!";
   }
 
-  const { answer, category, questionText } = options;
+  const { answer, category, questionText, savagery } = options;
   
-  // --- REVISED PROMPT 1 ---
+  // --- DYNAMIC PROMPT LOGIC ---
+  let savageryInstruction = "Your tone is condescending and brutally honest, but clever.";
+  if (savagery === 'savage') {
+    savageryInstruction = "The user gave a low rating, so they want a real roast. Step it up. Be extra condescending and merciless. Question their life choices more directly.";
+  }
+
   const prompt = `
-    You are a sharp-tongued Thrissur 'ettan' (older brother) roasting your younger sibling. Your tone is condescending and brutally honest, but clever, not vulgar.
+    You are a sharp-tongued Thrissur 'ettan' (older brother) roasting your younger sibling. ${savageryInstruction}
 
     **Your Rules:**
     - Use natural Manglish with authentic Thrissur slang. Examples: 'ente gediye', 'what coconut are you speakng', 'thakali', 'thengeda moode', 'chali parayathe monew', 'mandatharam', 'nanayittund'.
-    - **Avoid vulgar words.** The roast should be savage because it's clever and true,because of low profanity.
+    - **Avoid overly vulgar words, but be savage.** The roast should be clever and true.
     - Start with a condescending observation like "allada..." or "nee enthutta ...".
     - Directly question their logic and imply their choice is pointless and stupid.
     - Keep it short, like a sharp, roast comment.
@@ -81,36 +86,36 @@ export const generateSassyResponse = async (options: SassyResponseOptions): Prom
     Question: "${questionText}"
     User's Answer: "${answer}"
   `;
+
   try {
     const response = await callGeminiAPI(prompt);
-    return response || "My AI brain is buffering... try again! 🤖✨";
+    return response || "Enthokkeyo oru preshnam... Pinne nokkam!";
   } catch (error) {
     console.error('Gemini API error:', error);
-    return `My sass circuits are overloaded! ${error.message}`;
+    return `Scene contra aayi! ${error.message}`;
   }
 };
 
 export const generatePersonalityReport = async (options: PersonalityReportOptions): Promise<string> => {
   if (!apiKey) {
     const { archetype, weirdestAnswer } = options;
-    return `${archetype} 🎭\n\nYour personality is like a beautiful mystery - I'd love to roast you properly, but I need a Gemini API key first! 🔥\n\nLife Tips:\n• Add your Gemini API key to unlock premium sass\n• You're probably amazing anyway\n• Check the setup instructions\n\nYour weirdest answer about "${weirdestAnswer}" is still haunting my circuits! 🤖✨`;
+    return `${archetype} 🎭\n\nIvide full scene aanallo! Oru report tharan enikk API key venam ketto. Veruthe alla ninne '${weirdestAnswer}' ennu parayunne!`;
   }
 
   const { chaosIndex, vintageVibes, questionableChoices, archetype, weirdestAnswer } = options;
 
-  // --- REVISED PROMPT 2 ---
- const prompt = `
+  const prompt = `
     You are a sharp-tongued Thrissur 'ettan' (older brother) giving a final analysis of your younger sibling's personality. Your goal is to roast them mercilessly with cleverness and classic Thrissur charm.
 
     **Your Task:**
-    Generate a "Personality 'Vaaral' Report" (Roast Report). **Do not use any vulgar words.**
+    Generate a "Personality 'Vaaral' Report" (Roast Report). **Do not use overly vulgar words.**
 
     **Structure your response EXACTLY like this:**
     - **Archetype:** Start with the archetype name, followed by a condescending, 'enda gediye ninte oru avastha' style observation.
     - **Analysis:** Write a 2-3 sentence savage ookal. Connect their metrics to a cringe, local Thrissur failure, like messing up a plan or making a 'ultimate stupid' decision.
-    - **"Life Tips":** Provide 3 sarcastic 'upadeshams' (advice) that sound like an older brother roasting them for their sillyand stupid life choices life choices.
+    - **"Life Tips":** Provide 3 sarcastic 'upadeshams' (advice) that sound like an older brother roasting them for their silly and stupid life choices.
     - **Closing Line:** End with a final, dismissive and brutal roast comment about their weirdest answer, questioning how they function in daily life.
-    - **Tone:** Condescending older brother, teasing and ookal, brutally honest and roasting , and 100% Thrissur.
+    - **Tone:** Condescending older brother, teasing and ookal, brutally honest and roasting, and 100% Thrissur.
 
     ---
     **Data for the report:**
@@ -125,9 +130,9 @@ export const generatePersonalityReport = async (options: PersonalityReportOption
 
   try {
     const response = await callGeminiAPI(prompt);
-    return response || `${archetype} 🎭\n\nYour personality is like a beautiful trainwreck - fascinating to watch but probably shouldn't get too close. You're living your best chaotic life!\n\nLife Tips:\n• Embrace the chaos\n• Trust the process\n• Maybe reconsider "${weirdestAnswer}"\n\nKeep being gloriously unpredictable! 🌟`;
+    return response || `${archetype} 🎭\n\nEnda mone, ninte report load cheyyan pattunnillallo! Ninte ee '${weirdestAnswer}' enna answer kanditt AI polum hang aayi!`;
   } catch (error) {
     console.error('Gemini API error:', error);
-    return `My AI brain crashed trying to process your personality. ${error.message}`;
+    return `Report edukkan poyappo pani kitti! ${error.message}`;
   }
 };
