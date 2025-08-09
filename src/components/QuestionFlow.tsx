@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input'; // Make sure you have an Input component
 import { Question } from '@/data/questions';
-import { ChevronRight, Sparkles } from 'lucide-react';
+import { ChevronRight, Sparkles, Send } from 'lucide-react';
 
 interface QuestionFlowProps {
   question: Question;
@@ -14,15 +15,31 @@ interface QuestionFlowProps {
 export const QuestionFlow = ({ question, onAnswerSelect, className = '' }: QuestionFlowProps) => {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [customAnswer, setCustomAnswer] = useState('');
 
   const handleAnswerClick = (index: number) => {
     setSelectedAnswer(index);
     setShowConfirm(true);
+    setShowCustomInput(false); // Hide custom input if a predefined option is selected
   };
 
   const handleConfirm = () => {
     if (selectedAnswer !== null) {
       onAnswerSelect(selectedAnswer, question.options[selectedAnswer]);
+    }
+  };
+
+  const handleOtherClick = () => {
+    setShowCustomInput(true);
+    setSelectedAnswer(null); // Deselect any previous answer
+    setShowConfirm(false);
+  };
+
+  const handleCustomSubmit = () => {
+    if (customAnswer.trim()) {
+      // Use -1 as a special index for custom answers
+      onAnswerSelect(-1, customAnswer);
     }
   };
 
@@ -107,9 +124,59 @@ export const QuestionFlow = ({ question, onAnswerSelect, className = '' }: Quest
                   </Button>
                 </motion.div>
               ))}
+              {/* "Other" Button */}
+               <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 + question.options.length * 0.1, duration: 0.4 }}
+                >
+                  <Button
+                    variant={showCustomInput ? "default" : "outline"}
+                    onClick={handleOtherClick}
+                    className={`
+                      w-full p-4 h-auto text-left justify-start transition-all duration-300
+                      ${showCustomInput
+                        ? 'bg-gradient-primary text-white shadow-lg scale-105 border-transparent'
+                        : 'hover:border-primary/50 hover:bg-primary/5 hover:scale-102'
+                      }
+                    `}
+                  >
+                    Other (Type your own)
+                  </Button>
+                </motion.div>
             </motion.div>
 
-            {/* Confirm Button */}
+            {/* Custom Input Section */}
+            <AnimatePresence>
+              {showCustomInput && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.4, ease: 'easeInOut' }}
+                  className="space-y-4 pt-4 overflow-hidden"
+                >
+                  <Input 
+                    type="text"
+                    placeholder="Spill the tea..."
+                    value={customAnswer}
+                    onChange={(e) => setCustomAnswer(e.target.value)}
+                    className="text-base h-12"
+                  />
+                  <Button
+                    onClick={handleCustomSubmit}
+                    size="lg"
+                    className="w-full bg-gradient-secondary hover:opacity-90 transition-opacity group"
+                    disabled={!customAnswer.trim()}
+                  >
+                    <span>Submit My Sass</span>
+                    <Send size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Confirm Button for predefined answers */}
             <AnimatePresence>
               {showConfirm && (
                 <motion.div
