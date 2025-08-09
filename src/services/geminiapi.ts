@@ -50,7 +50,8 @@ async function callGeminiAPI(prompt: string): Promise<string> {
   } else {
     const blockReason = result?.promptFeedback?.blockReason;
     if (blockReason) {
-        throw new Error(`Request was blocked for safety reasons: ${blockReason}.`);
+        // This is the most likely cause of the error
+        throw new Error(`Request was blocked for safety reasons: ${blockReason}. Try making the prompt less aggressive.`);
     } else {
         throw new Error('Unexpected API response format.');
     }
@@ -58,50 +59,39 @@ async function callGeminiAPI(prompt: string): Promise<string> {
 }
 
 export const generateSassyResponse = async (options: SassyResponseOptions): Promise<string> => {
-  // Check if the API key is available
   if (!apiKey) {
     return "Oops! My AI brain needs an API key to function! 🤖💭 Please add your Gemini API key to get the full sass experience!";
   }
 
   const { answer, category, questionText } = options;
   
-  const categoryHooks: Record<string, string> = {
-    food: "Time to judge your taste buds",
-    time: "Let's roast your sleep schedule",
-    choice: "Your life choices are... interesting",
-    social: "Social skills assessment incoming",
-    productivity: "Productivity guru or chaos goblin?"
-  };
-
-  // Construct a single prompt for the Gemini API
+  // --- REVISED PROMPT 1 ---
   const prompt = `
-    You are an insult comedian on stage at a roast battle. Your persona is brutal, merciless, and you find the user's answers pathetic. You do not care about their feelings at all. Your only goal is to tear them apart.
+    You are a sharp-tongued insult comedian doing a roast. Your persona is cutting, condescending, and brutally honest. Your goal is to find the flaw in the user's answer and mock it mercilessly.
 
     **Your Rules:**
-    - Absolutely no holding back. Be savage.
-    - Directly attack the user's choice. Question their intelligence and judgment.
-    - Use heavy sarcasm and a condescending tone.
-    - Keep it short, sharp, and brutal. Under 40 words.
-    - No emojis. Emojis are for people with friends.
+    - Be harsh and judgmental, but focus on the choice, not the person.
+    - Use clever, biting sarcasm.
+    - Keep it short and impactful, under 40 words.
+    - No emojis. Emojis are for amateurs.
+    - Your tone is that of someone who is deeply unimpressed.
 
     ---
-    **Demolish this user's answer:**
+    **Roast this user's terrible answer:**
     Question: "${questionText}"
     User's Answer: "${answer}"
   `;
-
 
   try {
     const response = await callGeminiAPI(prompt);
     return response || "My AI brain is buffering... try again! 🤖✨";
   } catch (error) {
     console.error('Gemini API error:', error);
-    return "My sass circuits are overloaded! 😵‍💫🔥 Try again and I'll roast you properly!";
+    return `My sass circuits are overloaded! ${error.message}`;
   }
 };
 
 export const generatePersonalityReport = async (options: PersonalityReportOptions): Promise<string> => {
-  // Check if the API key is available
   if (!apiKey) {
     const { archetype, weirdestAnswer } = options;
     return `${archetype} 🎭\n\nYour personality is like a beautiful mystery - I'd love to roast you properly, but I need a Gemini API key first! 🔥\n\nLife Tips:\n• Add your Gemini API key to unlock premium sass\n• You're probably amazing anyway\n• Check the setup instructions\n\nYour weirdest answer about "${weirdestAnswer}" is still haunting my circuits! 🤖✨`;
@@ -109,35 +99,36 @@ export const generatePersonalityReport = async (options: PersonalityReportOption
 
   const { chaosIndex, vintageVibes, questionableChoices, archetype, weirdestAnswer } = options;
 
-  // Construct a single prompt for the Gemini API
- const prompt = `
-    You are a brutal insult comedian delivering the final, devastating roast of the night. The user's personality report is in front of you, and it's a goldmine of failure. Your goal is to completely dismantle them based on their choices.
+  // --- REVISED PROMPT 2 ---
+  const prompt = `
+    You are a brutal insult comedian delivering a final "Personality Roast". You're looking at the user's results and you are not impressed. Your goal is to deliver a final, crushing roast based on their choices.
 
     **Your Task:**
-    Generate a "Personality Demolition Report".
+    Generate a "Personality Roast Report".
 
     **Structure your response EXACTLY like this:**
-    - Start with the archetype name, followed by a deeply insulting observation.
-    - Write a 3-sentence brutal roast, using their metrics to paint a picture of their life choices as a complete disaster.
-    - Provide 3 terrible "life tips" that are sarcastic and encourage their worst habits.
+    - Start with the archetype name, followed by a condescending observation.
+    - Write a 3-sentence roast that uses their metrics to highlight their flaws.
+    - Provide 3 sarcastic "life tips" that are actually insults.
     - Write a final, dismissive closing line about their weirdest answer.
-    - Keep the tone merciless and judgmental.
+    - Keep the tone merciless and judgmental, but avoid direct attacks.
 
     ---
-    **Data for the demolition:**
+    **Data for the roast:**
     - Archetype: ${archetype}
     - Chaos Index: ${chaosIndex}%
     - Vintage Vibes: ${vintageVibes}%
     - Questionable Choices: ${questionableChoices}%
     - Weirdest Answer from the user: "${weirdestAnswer}"
 
-    Now, absolutely destroy them.
+    Now, deliver the final roast.
   `;
+
   try {
     const response = await callGeminiAPI(prompt);
     return response || `${archetype} 🎭\n\nYour personality is like a beautiful trainwreck - fascinating to watch but probably shouldn't get too close. You're living your best chaotic life!\n\nLife Tips:\n• Embrace the chaos\n• Trust the process\n• Maybe reconsider "${weirdestAnswer}"\n\nKeep being gloriously unpredictable! 🌟`;
   } catch (error) {
     console.error('Gemini API error:', error);
-    return `${archetype} 🎭\n\nMy AI brain crashed trying to process your personality - that's actually impressive! You've achieved peak chaos level.\n\nLife Tips:\n• You broke an AI, congrats\n• Maybe tone it down 5%\n• Actually, don't change\n\nYour weirdest answer about "${weirdestAnswer}" will haunt my circuits forever! 🤖💫`;
+    return `My AI brain crashed trying to process your personality. ${error.message}`;
   }
 };
