@@ -119,6 +119,7 @@ export const generatePersonalityReport = async (options: PersonalityReportOption
     - Vintage Vibes: ${vintageVibes}%
     - Questionable Choices: ${questionableChoices}%
     - Weirdest Answer from the user: "${weirdestAnswer}"
+    `;
 
 
   try {
