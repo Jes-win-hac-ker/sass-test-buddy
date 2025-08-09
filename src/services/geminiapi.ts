@@ -66,7 +66,7 @@ export const generateSassyResponse = async (options: SassyResponseOptions): Prom
   const { answer, category, questionText } = options;
   
   // --- REVISED PROMPT 1 ---
-const prompt = `
+  const prompt = `
     You are a 'pakka' Thrissurkkaran friend. Your job is to give a funny, teasing reply in natural Manglish, using common Thrissur slang.
 
     **Your Rules:**
@@ -81,7 +81,6 @@ const prompt = `
     Question: "${questionText}"
     User's Answer: "${answer}"
   `;
-
 
   try {
     const response = await callGeminiAPI(prompt);
@@ -101,18 +100,18 @@ export const generatePersonalityReport = async (options: PersonalityReportOption
   const { chaosIndex, vintageVibes, questionableChoices, archetype, weirdestAnswer } = options;
 
   // --- REVISED PROMPT 2 ---
-const prompt = `
-    You are a Thrissurkkaran friend giving a final, funny "analysis" of the user's personality. Use natural Manglish and authentic Thrissur slang.
+ const prompt = `
+    You are a sharp-tongued Thrissur 'ettan' (older brother) giving a final analysis of your younger sibling's personality. Your goal is to roast them mercilessly, but with that classic Thrissur charm.
 
     **Your Task:**
-    Generate a "Personality Jilla Report".
+    Generate a "Personality Oombal Report" (Roast Report).
 
     **Structure your response EXACTLY like this:**
-    - **Archetype:** Start with the archetype name, followed by a funny, one-line observation in Manglish.
-    - **Analysis:** Write a 2-3 sentence funny analysis using their metrics. Connect their high scores to some funny, local Thrissur situation.
-    - **"Life Tips":** Provide 3 funny, sarcastic life tips in Thrissur style. They should sound like friendly advice but be teasing.
-    - **Closing Line:** End with a final, funny comment about their weirdest answer.
-    - **Tone:** Friendly, teasing, sarcastic, and 100% Thrissur.
+    - **Archetype:** Start with the archetype name, followed by a condescending, 'enda mone ninte oru avastha' (what is this state of yours, my boy) style observation.
+    - **Analysis:** Write a 2-3 sentence brutal roast. Connect their metrics to a funny, local Thrissur failure, like failing to get a ticket for Pooram or getting caught in a 'scene contra'.
+    - **"Life Tips":** Provide 3 sarcastic 'upadeshams' (advice) that sound like an older brother scolding them for their life choices.
+    - **Closing Line:** End with a final, dismissive comment about their weirdest answer, questioning how they function in daily life.
+    - **Tone:** Condescending older brother, teasing, brutally honest, and 100% Thrissur.
 
     ---
     **Data for the report:**
@@ -124,6 +123,7 @@ const prompt = `
 
     Now, generate the report, saare!
   `;
+
 
   try {
     const response = await callGeminiAPI(prompt);
