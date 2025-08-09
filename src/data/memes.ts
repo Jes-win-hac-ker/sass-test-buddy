@@ -1,10 +1,10 @@
 // This object maps your personality archetypes to the image files in your public/memes/ folder.
 export const memes: Record<string, string> = {
-  "Beautiful Disaster 🌪️": "beautiful-disaster.png",
-  "Chaos Goblin 👹": "chaos-goblin.gif",
+  "Beautiful Disaster 🌪️": "beautiful-disaster.jpg",
+  "Chaos Goblin 👹": "chaos-goblin.jpg",
   "Controlled Chaos 🎯": "controlled-chaos.jpg",
-  "Nostalgic Rebel 🕰️": "nostalgic-rebel.gif",
-  "Professional Weirdo 🤪": "professional-weirdo.png",
+  "Nostalgic Rebel 🕰️": "nostalgic-rebel.jpg",
+  "Professional Weirdo 🤪": "professional-weirdo.jpg",
   "Suspiciously Normal 🤔": "suspiciously-normal.jpg",
   "Vintage Soul 📻": "vintage-soul.jpg",
 };
