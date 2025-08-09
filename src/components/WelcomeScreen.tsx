@@ -56,7 +56,7 @@ export const WelcomeScreen = ({ onStart, className = '' }: WelcomeScreenProps) =
             transition={{ delay: 0.5, duration: 0.6 }}
             className="text-4xl md:text-6xl font-bold bg-gradient-primary bg-clip-text text-transparent"
           >
-            SassBot Personality Test
+            Vaayil Thonniyathu
           </motion.h1>
           
           <motion.p
@@ -65,9 +65,7 @@ export const WelcomeScreen = ({ onStart, className = '' }: WelcomeScreenProps) =
             transition={{ delay: 0.7, duration: 0.6 }}
             className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto"
           >
-            Ready to get absolutely <span className="text-neon-pink font-bold">roasted</span> by an AI? 
-            Answer 5 questions and discover your personality archetype... 
-            <span className="text-sunset-orange font-bold">with maximum sass</span> 🔥
+            Ninte vaayil thonniyathu para... njangalathinu oru <span className="text-neon-pink font-bold">aakkal</span> aakkitharam! 🔥
           </motion.p>
         </div>
       </motion.div>
@@ -82,8 +80,8 @@ export const WelcomeScreen = ({ onStart, className = '' }: WelcomeScreenProps) =
         {[
           {
             icon: <Zap className="text-neon-pink" size={32} />,
-            title: "AI-Powered Sass",
-            description: "Get roasted by ChatGPT with surgical precision and comedic timing"
+            title: "AI-Powered Kalakkal",
+            description: "Get roasted by a Gemini-powered AI with surgical precision and comedic timing"
           },
           {
             icon: <Heart className="text-lavender" size={32} />,
