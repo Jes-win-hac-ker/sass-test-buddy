@@ -9,6 +9,7 @@ import { questions, getTotalQuestions } from '@/data/questions';
 import { generateSassyResponse, generatePersonalityReport } from '@/services/geminiapi';
 import { calculatePersonalityMetrics, determineArchetype, findWeirdestAnswer } from '@/utils/personalityCalculator';
 import type { AnswerData } from '@/utils/personalityCalculator';
+import { getMemeForArchetype } from '@/data/memes'; // Import the new meme function
 
 type TestState = 'welcome' | 'question' | 'response' | 'report';
 
@@ -21,8 +22,8 @@ export const PersonalityTest = () => {
   const [isLoadingReport, setIsLoadingReport] = useState(false);
   const [personalityReport, setPersonalityReport] = useState('');
   const [ratings, setRatings] = useState<number[]>([]);
-  // State to track the roast intensity
   const [savageryLevel, setSavageryLevel] = useState<'normal' | 'savage'>('normal');
+  const [memeUrl, setMemeUrl] = useState(''); // State to hold the meme URL
 
   const totalQuestions = getTotalQuestions();
   const currentQuestion = questions[currentQuestionIndex];
@@ -43,7 +44,6 @@ export const PersonalityTest = () => {
     setState('response');
 
     try {
-      // Pass the current savagery level to the API call
       const response = await generateSassyResponse({
         answer: answerText,
         category: currentQuestion.category,
@@ -61,7 +61,6 @@ export const PersonalityTest = () => {
 
   const handleRatingChange = (rating: number) => {
     setRatings(prev => [...prev, rating]);
-    // If rating is 2 stars or less, increase savagery for the next round
     if (rating <= 2) {
       setSavageryLevel('savage');
     } else {
@@ -86,6 +85,10 @@ export const PersonalityTest = () => {
       const metrics = calculatePersonalityMetrics(answers);
       const archetype = determineArchetype(metrics);
       const weirdestAnswer = findWeirdestAnswer(answers);
+      
+      // Get the meme for the calculated archetype
+      const meme = getMemeForArchetype(archetype);
+      setMemeUrl(meme);
 
       const report = await generatePersonalityReport({
         chaosIndex: metrics.chaosIndex,
@@ -111,7 +114,8 @@ export const PersonalityTest = () => {
     setCurrentResponse('');
     setPersonalityReport('');
     setRatings([]);
-    setSavageryLevel('normal'); // Reset savagery level
+    setSavageryLevel('normal');
+    setMemeUrl(''); // Reset the meme URL
   };
 
   const getProgressStep = () => {
@@ -127,7 +131,6 @@ export const PersonalityTest = () => {
   return (
     <div className="min-h-screen bg-background py-8 px-4">
       <div className="container mx-auto max-w-6xl">
-        {/* Progress Bar - Show only during test */}
         {state !== 'welcome' && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -141,28 +144,15 @@ export const PersonalityTest = () => {
           </motion.div>
         )}
 
-        {/* Main Content */}
         <AnimatePresence mode="wait">
           {state === 'welcome' && (
-            <motion.div
-              key="welcome"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
+            <motion.div key="welcome" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
               <WelcomeScreen onStart={handleStart} />
             </motion.div>
           )}
 
           {state === 'question' && currentQuestion && (
-            <motion.div
-              key={`question-${currentQuestionIndex}`}
-              initial={{ opacity: 0, x: 100 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -100 }}
-              transition={{ duration: 0.5 }}
-            >
+            <motion.div key={`question-${currentQuestionIndex}`} initial={{ opacity: 0, x: 100 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -100 }} transition={{ duration: 0.5 }}>
               <QuestionFlow 
                 question={currentQuestion}
                 onAnswerSelect={handleAnswerSelect}
@@ -171,13 +161,7 @@ export const PersonalityTest = () => {
           )}
 
           {state === 'response' && (
-            <motion.div
-              key={`response-${currentQuestionIndex}`}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.5 }}
-            >
+            <motion.div key={`response-${currentQuestionIndex}`} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} transition={{ duration: 0.5 }}>
               <SassyResponse
                 response={currentResponse}
                 isLoading={isLoadingResponse}
@@ -188,20 +172,28 @@ export const PersonalityTest = () => {
           )}
 
           {state === 'report' && (
-            <motion.div
-              key="report"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -50 }}
-              transition={{ duration: 0.8 }}
-            >
-              <PersonalityReport
-                metrics={calculatePersonalityMetrics(answers)}
-                archetype={determineArchetype(calculatePersonalityMetrics(answers))}
-                report={personalityReport}
-                isLoading={isLoadingReport}
-                onRestart={handleRestart}
-              />
+            <motion.div key="report" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }} transition={{ duration: 0.8 }}>
+              <div className="w-full max-w-4xl mx-auto relative">
+                {/* Meme Display */}
+                {memeUrl && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.5, rotate: -15 }}
+                    animate={{ opacity: 1, scale: 1, rotate: 5 }}
+                    transition={{ type: 'spring', stiffness: 200, damping: 10, delay: 0.5 }}
+                    className="absolute top-0 right-0 w-32 h-32 md:w-48 md:h-48 z-10 -mt-8 -mr-8"
+                  >
+                    <img src={memeUrl} alt="Personality Meme" className="rounded-lg shadow-2xl w-full h-full object-cover border-4 border-white" />
+                  </motion.div>
+                )}
+                
+                <PersonalityReport
+                  metrics={calculatePersonalityMetrics(answers)}
+                  archetype={determineArchetype(calculatePersonalityMetrics(answers))}
+                  report={personalityReport}
+                  isLoading={isLoadingReport}
+                  onRestart={handleRestart}
+                />
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
