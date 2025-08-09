@@ -6,7 +6,7 @@ import { SassyResponse } from '@/components/SassyResponse';
 import { PersonalityReport } from '@/components/PersonalityReport';
 import { ProgressBar } from '@/components/ProgressBar';
 import { questions, getTotalQuestions } from '@/data/questions';
-import { generateSassyResponse, generatePersonalityReport } from '@/services/openai';
+import { generateSassyResponse, generatePersonalityReport } from '@/services/geminiapi';
 import { calculatePersonalityMetrics, determineArchetype, findWeirdestAnswer } from '@/utils/personalityCalculator';
 import type { AnswerData } from '@/utils/personalityCalculator';
 
