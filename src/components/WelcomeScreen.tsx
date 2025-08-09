@@ -65,7 +65,7 @@ export const WelcomeScreen = ({ onStart, className = '' }: WelcomeScreenProps) =
             transition={{ delay: 0.7, duration: 0.6 }}
             className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto"
           >
-            Ninte vaayil thonniyathu para... njangalathinu oru <span className="text-neon-pink font-bold">aakkal</span> aakkitharam! 🔥
+            Ninte vaayil thonniyathu para... njangalathinu oru <span className="text-neon-pink font-bold">ookkal</span> aakkitharam! 🔥
           </motion.p>
         </div>
       </motion.div>
