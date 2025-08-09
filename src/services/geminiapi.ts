@@ -110,33 +110,29 @@ export const generatePersonalityReport = async (options: PersonalityReportOption
   const { chaosIndex, vintageVibes, questionableChoices, archetype, weirdestAnswer } = options;
 
   // Construct a single prompt for the Gemini API
-  const prompt = `
-    You are SassBot, and you are generating a "Personality Roast Report". Be hilariously sassy but insightful.
+ const prompt = `
+    You are a brutal insult comedian delivering the final, devastating roast of the night. The user's personality report is in front of you, and it's a goldmine of failure. Your goal is to completely dismantle them based on their choices.
 
     **Your Task:**
-    Generate a personality roast report based on the following data.
+    Generate a "Personality Demolition Report".
 
     **Structure your response EXACTLY like this:**
-    - Start with the archetype name and a relevant emoji.
-    - Write a 3-sentence personality roast based on the metrics.
-    - Provide 3 sarcastic life tips.
-    - Write a closing line referencing their weirdest answer.
-    - Keep the total response between 150-200 words.
-    - Use emojis throughout but don't go overboard.
-
-    **Your Tone:** Witty, roast-y, pop culture savvy, self-aware AI humor.
+    - Start with the archetype name, followed by a deeply insulting observation.
+    - Write a 3-sentence brutal roast, using their metrics to paint a picture of their life choices as a complete disaster.
+    - Provide 3 terrible "life tips" that are sarcastic and encourage their worst habits.
+    - Write a final, dismissive closing line about their weirdest answer.
+    - Keep the tone merciless and judgmental.
 
     ---
-    **Data for the report:**
+    **Data for the demolition:**
     - Archetype: ${archetype}
     - Chaos Index: ${chaosIndex}%
     - Vintage Vibes: ${vintageVibes}%
     - Questionable Choices: ${questionableChoices}%
     - Weirdest Answer from the user: "${weirdestAnswer}"
 
-    Now, generate the report. Make it savage but fun!
+    Now, absolutely destroy them.
   `;
-
   try {
     const response = await callGeminiAPI(prompt);
     return response || `${archetype} 🎭\n\nYour personality is like a beautiful trainwreck - fascinating to watch but probably shouldn't get too close. You're living your best chaotic life!\n\nLife Tips:\n• Embrace the chaos\n• Trust the process\n• Maybe reconsider "${weirdestAnswer}"\n\nKeep being gloriously unpredictable! 🌟`;
